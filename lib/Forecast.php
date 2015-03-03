@@ -20,18 +20,24 @@
  * This wrapper handles many simultaneous requests with cURL or single requests 
  * without cURL.
  * 
- * @package ForecastTools
- * @author  Charlie Gorichanaz <charlie@gorichanaz.com>
- * @license http://opensource.org/licenses/MIT The MIT License
- * @version 1.0
- * @link    http://github.com/CNG/ForecastTools
- * @example ../example.php 
+ * @package     ForecastTools
+ * @author      Charlie Gorichanaz <charlie@gorichanaz.com>
+ * @contributor Shannon Little     <slittle@drakecooper.com>
+ * @license     http://opensource.org/licenses/MIT The MIT License
+ * @version     1.1
+ * @link        http://github.com/Enchiridion/ForecastTools
+ * @example     ../example.php
  */
 class Forecast
 {
 
   private $_api_key;
   private $_threads; // multi cURL simultaneous requests
+
+  private $_cache_enabled;
+  private $_cache_handler;
+  private $_cache_timeout;
+
   const   API_URL = 'https://api.forecast.io/forecast/';
 
   /**
@@ -241,20 +247,30 @@ class Forecast
     $responses = array();
 
     foreach ($request_urls as $request_url) {
+      $cache_id = 'forecast.io_' . md5($request_url);
 
-      $ch1 = curl_init();
-      curl_setopt($ch1, CURLOPT_URL, $request_url);
-      curl_setopt($ch1, CURLOPT_HEADER, 0);
-      curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
-      $response = curl_exec($ch1);
-      $responses[] = $response;
-      if ($response === false) {
-        $curlError = curl_error($ch1);
-        $err = "cURL error: $curlError";
-        trigger_error(__FILE__ . ':L' . __LINE__ . ": $err\n");
+      if ($this->_cache_enabled && $this->_cache_handler->contains($cache_id)) {
+        // Load cached data
+        $responses[] = unserialize($this->_cache_handler->fetch($cache_id));
+      } else {
+        $ch1 = curl_init();
+        curl_setopt($ch1, CURLOPT_URL, $request_url);
+        curl_setopt($ch1, CURLOPT_HEADER, 0);
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch1);
+        $responses[] = $response;
+        if ($response === false) {
+          $curlError = curl_error($ch1);
+          $err = "cURL error: $curlError";
+          trigger_error(__FILE__ . ':L' . __LINE__ . ": $err\n");
+        }
+        curl_close($ch1);
+
+        if ($this->_cache_enabled) {
+          // Save response to cache
+          $this->_cache_handler->save($cache_id, serialize($response), $this->_cache_timeout);
+        }
       }
-      curl_close($ch1);
-
     }
 
     return $responses;
@@ -276,24 +292,24 @@ class Forecast
     $responses = array();
 
     foreach ($request_urls as $request_url) {
-      
-      /**
-        * Use Buffer to cache API-requests if initialized
-        * (if not, just get the latest data)
-        * 
-        * More info: http://git.io/FoO2Qw
-        */
-      
-      if(class_exists('Buffer')) {
-        $cache = new Buffer();
-        $response = $cache->data($request_url);
+      $cache_id = 'forecast.io_' . md5($request_url);
+
+      if ($this->_cache_enabled && $this->_cache_handler->contains($cache_id)) {
+        // Load cached data
+        $responses[] = unserialize($this->_cache_handler->fetch($cache_id));
       } else {
         $response = file_get_contents($request_url);
-      }
-      
-      $responses[] = $response;
-      if ($response === false) {
-        trigger_error(__FILE__ . ':L' . __LINE__ . ": Error on file_get_contents($request_url)\n");
+        
+        $responses[] = $response;
+
+        if ($response === false) {
+          trigger_error(__FILE__ . ':L' . __LINE__ . ": Error on file_get_contents($request_url)\n");
+        }
+
+        if ($this->_cache_enabled) {
+          // Save response to cache
+          $this->_cache_handler->save($cache_id, serialize($response), $this->_cache_timeout);
+        }
       }
 
     }
@@ -393,6 +409,10 @@ class Forecast
       throw new ForecastException(__FUNCTION__ . " called with invalid parameters.");
     }
 
+    $this->_cache_enabled = isset($requests[0]['cache_enabled']) ? $requests[0]['cache_enabled'] : false;
+    $this->_cache_handler = isset($requests[0]['cache_handler']) ? $requests[0]['cache_handler'] : null;
+    $this->_cache_timeout = isset($requests[0]['cache_timeout']) ? $requests[0]['cache_timeout'] : 60 * 60;
+    
     $json_results = $this->_request($requests);
 
     // Wrap JSON responses in ForecastResponse objects or leave as false and

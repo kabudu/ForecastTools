@@ -28,10 +28,10 @@
  * is not precisely known (though generally considered to be adequate).
  *
  * @package ForecastTools
- * @author  Charlie Gorichanaz <charlie@gorichanaz.com>
+ * @author  Shannon Little <slittle@drakecooper.com>, Charlie Gorichanaz <charlie@gorichanaz.com>
  * @license http://opensource.org/licenses/MIT The MIT License
- * @version 1.0
- * @link    http://github.com/CNG/ForecastTools
+ * @version 1.1
+ * @link    http://github.com/Enchiridion/ForecastTool
  * @example ../example.php 
  */
 class ForecastDataPoint
@@ -425,4 +425,25 @@ class ForecastDataPoint
     return empty($this->_point_data->$field) ? false : $this->_point_data->$field;
   }
 
+  /**
+   * A numerical value representing the distance of the nearest storm.
+   *
+   * @return int|bool nearestStormDistance
+   */
+  public function getNearestStormDistance()
+  {
+    $field = 'nearestStormDistance';
+    return empty($this->_point_data->$field) ? false : $this->_point_data->$field;
+  }
+
+  /**
+   * A numerical value representing the bearing of the nearest storm.
+   *
+   * @return int|bool nearestStormBearing
+   */
+  public function getNearestStormBearing()
+  {
+    $field = 'nearestStormBearing';
+    return empty($this->_point_data->$field) ? false : $this->_point_data->$field;
+  }
 }

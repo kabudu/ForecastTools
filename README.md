@@ -279,7 +279,9 @@ The errors do not happen when doing fewer requests in a short period, so I attri
 
 - Version 1.0: 7 October 2013
   - First release
-
+- Version 1.1: 2 March 2015 by Shannon Little
+  - Added ability to cache data
+  - Added methods to get nearest storm data
 
 ## Improvements to come
 
