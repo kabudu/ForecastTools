@@ -86,8 +86,8 @@ class Forecast
     foreach ($requests_data as $request_data) {
 
       // required attributes
-      $latitude  = $request_data['latitude'];
-      $longitude = $request_data['longitude'];
+      $latitude  = floatval($request_data['latitude']);
+      $longitude = floatval($request_data['longitude']);
       // optional attributes
       $time      = empty($request_data['time']) ? null : $request_data['time'];
       $options   = array();
