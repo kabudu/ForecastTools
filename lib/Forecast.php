@@ -177,7 +177,7 @@ class Forecast
 
         $cache_id = 'forecast.io_' . md5(implode('-', $request_urls));
         if ($this->_cache_enabled && $this->_cache_handler->contains($cache_id)) {
-            $responses[] = unserialize($this->_cache_handler->fetch($cache_id));
+            $responses = explode('[]',$this->_cache_handler->fetch($cache_id));
         } else {
             for ($j = 0; $j < $iterations; $j++) {
 
@@ -238,10 +238,9 @@ class Forecast
                 $responses = array_merge($responses, $responses_part);
 
             }
-
             if ($this->_cache_enabled) {
                 // Save response to cache
-                $this->_cache_handler->save($cache_id, serialize($responses), $this->_cache_timeout);
+                $this->_cache_handler->save($cache_id, implode('[]',$responses), $this->_cache_timeout);
             }
         }
 
