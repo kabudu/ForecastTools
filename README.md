@@ -69,6 +69,7 @@ Here is how you could copy the files to your server if your web root is `/var/ww
             "kabudu/ForecastTools": "1.0.0"
         }
     }
+    
 - Run composer install    
 
 ## Structure
