@@ -1,4 +1,7 @@
 <?php
+
+namespace ForecastTools\Exception;
+
 /**
  * ForecastException.php
  */
@@ -11,11 +14,12 @@
  *
  * @package ForecastTools
  * @author  Charlie Gorichanaz <charlie@gorichanaz.com>
+ * @contributor Kamba Abudu <kabudu@gmail.com>
  * @license http://opensource.org/licenses/MIT The MIT License
  * @version 1.0
  * @link    http://github.com/CNG/ForecastTools
- * @example ../example.php 
+ * @example ../example.php
  */
-class ForecastException extends Exception
+class ForecastException extends \Exception
 {
 }

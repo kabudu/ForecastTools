@@ -47,3 +47,10 @@ $RECYCLE.BIN/
 
 # Tup files
 .tup/
+
+# PHP Storm
+.idea
+
+# Composer
+vendor/
+composer.lock

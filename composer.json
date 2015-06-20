@@ -1,0 +1,40 @@
+{
+  "name": "kabudu/ForecastTools",
+  "description": "Wrapper for Forecast.io API that supports many simultaneous API calls, substantially reducing wait time for any applications needing to look up weather conditions en masse.",
+  "authors": [
+    {
+      "name": "Charlie Gorichanaz",
+      "email": "charlie@gorichanaz.com"
+    },
+    {
+      "name": "Shannon Little",
+      "email": "slittle@drakecooper.com"
+    },
+    {
+      "name": "Kamba Abudu",
+      "email": "kabudu@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.3.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*@dev",
+    "predis/predis": "v1.0.1"
+  },
+  "suggest": {
+    "predis/predis": "Flexible and feature-complete PHP client library for Redis to use the Redis cache handler",
+    "redis": ">= 2.8 to use the redis cache handler"
+  },
+  "autoload": {
+    "psr-4": {
+      "ForecastTools\\": "lib/",
+      "ForecastTools\\Cache\\": "lib/",
+      "ForecastTools\\Model\\": "lib/",
+      "ForecastTools\\Exception\\": "lib/",
+      "ForecastTools\\Test\\": "tests/",
+      "Predis\\": "vendor/predis/predis/src/"
+    }
+  }
+}
