@@ -58,6 +58,18 @@ Here is how you could copy the files to your server if your web root is `/var/ww
     $ rm -f ForecastTools.zip
     $ mv ForecastTools-master ForecastTools
 
+#### Composer (advanced)
+
+- Install composer if you haven't already done so, go [here](https://getcomposer.org/doc/00-intro.md) for more details on composer
+- Add the following to your composer.json file
+
+  
+    {
+        "require": {
+            "kabudu/ForecastTools": "1.0.0"
+        }
+    }
+- Run composer install    
 
 ## Structure
 
@@ -168,6 +180,16 @@ Multiple simultaneous requests:
       array('latitude' => float, 'longitude' => float, 'time' => int),
       array('latitude' => float, 'longitude' => float, 'time' => int),
     );
+    $responses = $forecast->getData($requests);
+    
+Using the redis cache handler:
+    
+    $predisClient = new \Predis\Client();
+    $cacheHandler = new \ForecastTools\Cache\RedisCacheHandler($predisClient);
+    
+    $requests = array(
+          array('latitude' => float, 'longitude' => float, 'time' => int, 'cache_enabled' => true, 'cache_handler' => $cacheHandler, 'cache_timeout' => int),          
+        );
     $responses = $forecast->getData($requests);
 
 ### ForecastResponse
