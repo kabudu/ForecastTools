@@ -175,68 +175,77 @@ class Forecast
             $iterations++;
         }
 
-        for ($j = 0; $j < $iterations; $j++) {
+        $cache_id = 'forecast.io_' . md5(implode('-', $request_urls));
+        if ($this->_cache_enabled && $this->_cache_handler->contains($cache_id)) {
+            $responses[] = unserialize($this->_cache_handler->fetch($cache_id));
+        } else {
+            for ($j = 0; $j < $iterations; $j++) {
 
-            $request_urls_slice = array_slice($request_urls, $j * $threads, $threads);
-            $responses_part = array();
+                $request_urls_slice = array_slice($request_urls, $j * $threads, $threads);
+                $responses_part = array();
 
-            $mh = curl_multi_init();
-            foreach ($request_urls_slice as $i => $url) {
-                $ch[$i] = curl_init($url);
-                curl_setopt($ch[$i], CURLOPT_RETURNTRANSFER, 1);
-                curl_multi_add_handle($mh, $ch[$i]);
-            }
+                $mh = curl_multi_init();
+                foreach ($request_urls_slice as $i => $url) {
+                    $ch[$i] = curl_init($url);
+                    curl_setopt($ch[$i], CURLOPT_RETURNTRANSFER, 1);
+                    curl_multi_add_handle($mh, $ch[$i]);
+                }
 
-            // Following block replaces the commented out block below
-            // Old code worked w/ Ubuntu 12.04/Apache2.2, but not on Ubuntu 14.04 with Apache 2.4 and PHP-FPM
-            // Don't have time for more specifics at moment, but if you experience issues, try swapping out the blocks
+                // Following block replaces the commented out block below
+                // Old code worked w/ Ubuntu 12.04/Apache2.2, but not on Ubuntu 14.04 with Apache 2.4 and PHP-FPM
+                // Don't have time for more specifics at moment, but if you experience issues, try swapping out the blocks
 
-            $running = null;
-            do {
-                $execReturnValue = curl_multi_exec($mh, $running);
-            } while ($running > 0);
-
-            /*
-            do {
-                $execReturnValue = curl_multi_exec($mh, $runningHandles);
-            } while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
-            while ($runningHandles && $execReturnValue == CURLM_OK) {
-              $numberReady = curl_multi_select($mh);
-              if ($numberReady != -1) {
+                $running = null;
                 do {
-                  $execReturnValue = curl_multi_exec($mh, $runningHandles);
+                    $execReturnValue = curl_multi_exec($mh, $running);
+                } while ($running > 0);
+
+                /*
+                do {
+                    $execReturnValue = curl_multi_exec($mh, $runningHandles);
                 } while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
-              }
-            }
-            */
+                while ($runningHandles && $execReturnValue == CURLM_OK) {
+                  $numberReady = curl_multi_select($mh);
+                  if ($numberReady != -1) {
+                    do {
+                      $execReturnValue = curl_multi_exec($mh, $runningHandles);
+                    } while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
+                  }
+                }
+                */
 
-            if ($execReturnValue != CURLM_OK) {
-                $err = "Multi cURL read error $execReturnValue";
-                trigger_error(__FILE__ . ':L' . __LINE__ . ": $err\n");
-            }
-
-            foreach ($request_urls_slice as $i => $url) {
-
-                $curlError = curl_error($ch[$i]);
-                if ($curlError == "") {
-                    $responses_part[$i] = curl_multi_getcontent($ch[$i]);
-                } else {
-                    $responses_part[$i] = false;
-                    $err = "Multi cURL error on handle $i: $curlError";
+                if ($execReturnValue != CURLM_OK) {
+                    $err = "Multi cURL read error $execReturnValue";
                     trigger_error(__FILE__ . ':L' . __LINE__ . ": $err\n");
                 }
-                curl_multi_remove_handle($mh, $ch[$i]);
-                curl_close($ch[$i]);
+
+                foreach ($request_urls_slice as $i => $url) {
+
+                    $curlError = curl_error($ch[$i]);
+                    if ($curlError == "") {
+                        $responses_part[$i] = curl_multi_getcontent($ch[$i]);
+                    } else {
+                        $responses_part[$i] = false;
+                        $err = "Multi cURL error on handle $i: $curlError";
+                        trigger_error(__FILE__ . ':L' . __LINE__ . ": $err\n");
+                    }
+                    curl_multi_remove_handle($mh, $ch[$i]);
+                    curl_close($ch[$i]);
+
+                }
+                curl_multi_close($mh);
+
+                $responses = array_merge($responses, $responses_part);
 
             }
-            curl_multi_close($mh);
 
-            $responses = array_merge($responses, $responses_part);
-
+            if ($this->_cache_enabled) {
+                // Save response to cache
+                $this->_cache_handler->save($cache_id, serialize($responses), $this->_cache_timeout);
+            }
         }
 
         return $responses;
-
     }
 
     /**
