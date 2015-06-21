@@ -63,13 +63,13 @@ Here is how you could copy the files to your server if your web root is `/var/ww
 - Install composer if you haven't already done so, go [here](https://getcomposer.org/doc/00-intro.md) for more details on composer
 - Add the following to your composer.json file
 
-  
-    {
+
         "require": {
+        
             "kabudu/forecast-tools": "1.2"
+            
         }
-    }
-    
+        
 - Run composer install    
 
 ## Structure
