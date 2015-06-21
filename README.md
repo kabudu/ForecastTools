@@ -66,7 +66,7 @@ Here is how you could copy the files to your server if your web root is `/var/ww
   
     {
         "require": {
-            "kabudu/ForecastTools": "1.2"
+            "kabudu/forecast-tools": "1.2"
         }
     }
     

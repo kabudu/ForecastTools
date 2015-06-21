@@ -1,5 +1,5 @@
 {
-  "name": "kabudu/ForecastTools",
+  "name": "kabudu/forecast-tools",
   "description": "Wrapper for Forecast.io API that supports many simultaneous API calls, substantially reducing wait time for any applications needing to look up weather conditions en masse.",
   "authors": [
     {
