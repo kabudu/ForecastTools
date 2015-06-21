@@ -191,6 +191,7 @@ Using the redis cache handler:
     $requests = array(
           array('latitude' => float, 'longitude' => float, 'time' => int, 'cache_enabled' => true, 'cache_handler' => $cacheHandler, 'cache_timeout' => int),          
         );
+        
     $responses = $forecast->getData($requests);
 
 ### ForecastResponse
