@@ -66,7 +66,7 @@ Here is how you could copy the files to your server if your web root is `/var/ww
   
     {
         "require": {
-            "kabudu/ForecastTools": "1.0.0"
+            "kabudu/ForecastTools": "1.2"
         }
     }
     
@@ -305,6 +305,10 @@ The errors do not happen when doing fewer requests in a short period, so I attri
 - Version 1.1: 2 March 2015 by Shannon Little
   - Added ability to cache data
   - Added methods to get nearest storm data
+- Version 1.2: 21 June 2015 by Kamba Abudu
+  - Updated library to use namespaces and adhere to PSR1/PSR2/PSR4
+  - Implemented an interface for cache handlers and a Redis cache handler
+  - Added ability to cache data for the multi-curl context
 
 ## Improvements to come
 
