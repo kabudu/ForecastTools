@@ -2,7 +2,7 @@
 
 Wrapper for [Forecast.io](http://forecast.io/) [API](https://developer.forecast.io/) that supports many simultaneous API calls, substantially reducing wait time for any applications needing to look up weather conditions en masse.
 
-*Note: If you will never want to make more than one request at a time or cache the results (coming later), you might want to try [Guilherm Uhelski](https://github.com/guhelski)’s simpler [forecast-php](https://github.com/guhelski/forecast-php) project.*
+*Note: If you will never want to make more than one request at a time or cache the results, you might want to try [Guilherm Uhelski](https://github.com/guhelski)’s simpler [forecast-php](https://github.com/guhelski/forecast-php) project.*
 
 ### About the Forecast API
 
