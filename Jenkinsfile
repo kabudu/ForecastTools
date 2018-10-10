@@ -2,18 +2,6 @@ pipeline {
   agent any
   stages {
     stage('Build') {
-      agent {
-        docker {
-	  image: 'alpine:3.8'
-	}
-      }
-      steps {
-        sh apk update && apk add git wget php7
-	sh cd /tmp/
-	sh wget https://getcomposer.org/download/1.7.2/composer.phar.sha256sum -O /usr/bin/composer && chmod +x /usr/bin/composer
-	sh cd /tmp/ && git clone https://github.com/kabudu/forecast-tools.git && cd forecast-tools && git checkout jenkins-pipeline
-	sh composer install
-      }
     }
     stage('Tests') {
       parallel {
