@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Tests') {
       parallel {
-        stage('Tests') {
+        stage('Unit') {
           steps {
             sh 'echo Tests'
           }
