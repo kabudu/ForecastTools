@@ -9,7 +9,7 @@ pipeline {
 
       }
       steps {
-        sh '''apk update && apk add git wget php7 php7-phar php7-json && \\
+        sh '''apk update && apk add git wget php7 php7-phar php7-json php7-iconv php7-mbstring && \\
 cd /tmp/ && \\
 wget https://getcomposer.org/download/1.7.2/composer.phar -O /usr/bin/composer && \\
 chmod +x /usr/bin/composer && \\
