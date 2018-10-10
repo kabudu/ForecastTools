@@ -2,6 +2,9 @@ pipeline {
   agent any
   stages {
     stage('Build') {
+      steps {
+        sh 'echo "Static Analysis"'
+      }
     }
     stage('Tests') {
       parallel {
