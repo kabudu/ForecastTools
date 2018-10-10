@@ -16,7 +16,7 @@ chmod +x /usr/bin/composer && \\
 git clone https://github.com/kabudu/forecast-tools.git && \\
 cd forecast-tools && \\
 git checkout jenkins-pipeline && \\
-composer install'''
+/usr/bin/composer install'''
       }
     }
     stage('Tests') {
