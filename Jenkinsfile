@@ -2,8 +2,21 @@ pipeline {
   agent any
   stages {
     stage('Build') {
+      agent {
+        docker {
+          image 'alpine:3.8'
+        }
+
+      }
       steps {
-        sh 'echo "Static Analysis"'
+        sh '''apk update && apk add git wget php7 && \\
+cd /tmp/ && \\ 
+wget https://getcomposer.org/download/1.7.2/composer.phar.sha256sum -O /usr/bin/composer && \\ 
+chmod +x /usr/bin/composer && \\
+git clone https://github.com/kabudu/forecast-tools.git && \\ 
+cd forecast-tools && \\ 
+git checkout jenkins-pipeline && \\
+composer install'''
       }
     }
     stage('Tests') {
