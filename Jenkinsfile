@@ -19,13 +19,15 @@ git clone https://github.com/kabudu/forecast-tools.git && \\
 cd forecast-tools && \\
 git checkout jenkins-pipeline && \\
 /usr/bin/composer install'''
+        stash(name: 'Built repo code', includes: '/tmp/**/*')
       }
     }
     stage('Tests') {
       parallel {
         stage('Unit') {
           steps {
-            sh 'echo Tests'
+            sh '''cd /tmp/jenkins-pipeline && \\
+ls -la'''
           }
         }
         stage('Performance') {
