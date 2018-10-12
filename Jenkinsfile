@@ -16,6 +16,7 @@ git clone https://github.com/kabudu/forecast-tools.git && \\
 cd forecast-tools && \\
 git checkout jenkins-pipeline && \\
 /usr/bin/composer install && \\
+cd ../ && \\
 tar -zcvf forecast-tools-build.tar.gz forecast-tools/'''
         stash(name: 'build-files', includes: 'forecast-tools-build.tar.gz')
       }
