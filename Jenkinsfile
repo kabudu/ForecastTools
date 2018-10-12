@@ -19,7 +19,9 @@ git checkout jenkins-pipeline && \\
 /usr/bin/composer install && \\
 cd /tmp/ && \\
 tar -zcvf forecast-tools-build.tar.gz forecast-tools/ && \\
-stash forecast-tools-build.tar.gz'''
+cd && \\
+cp /tmp/forecast-tools-build.tar.gz .'''
+        stash(name: 'build-files', includes: 'forecast-tools-build.tar.gz')
       }
     }
     stage('Tests') {
