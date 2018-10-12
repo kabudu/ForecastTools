@@ -19,9 +19,7 @@ git checkout jenkins-pipeline && \\
 /usr/bin/composer install && \\
 cd /tmp/ && \\
 tar -zcvf forecast-tools-build.tar.gz forecast-tools/ && \\
-cd && \\
-cp /tmp/forecast-tools-build.tar.gz .'''
-        stash(name: 'build-package', includes: 'forecast-tools-build.tar.gz')
+stash forecast-tools-build.tar.gz'''
       }
     }
     stage('Tests') {
@@ -39,8 +37,8 @@ pecl install redis-4.1.1 && \\
 echo "extension=redis.so" > /etc/php7/conf.d/redis.ini && \\
 cd /tmp/ && \\
 wget https://getcomposer.org/download/1.7.2/composer.phar -O /usr/bin/composer && \\
-chmod +x /usr/bin/composer'''
-            unstash 'build-package'
+chmod +x /usr/bin/composer && \\
+unstash forecast-tools-build.tar.gz'''
             sh '''echo pwd && \\
 ls -la'''
           }
