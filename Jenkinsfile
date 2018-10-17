@@ -6,14 +6,16 @@ pipeline {
         docker {
           image 'alpine:3.7'
         }
+
       }
       steps {
-        withCredentials([sshUserPrivateKey(credentialsId: "deployitan-github", keyFileVariable: 'KEY_FILE')]) {
-            sh 'apk update && apk add openssh-client git'
-            sh 'mkdir -p ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts'
-            sh 'rm -rf offers-engine'
-            sh "GIT_SSH_COMMAND='ssh -i $KEY_FILE' git clone git@github.com:DocnetUK/offers-engine.git"
+        withCredentials(bindings: [sshUserPrivateKey(credentialsId: "deployitan-github", keyFileVariable: 'KEY_FILE')]) {
+          sh 'apk update && apk add openssh-client git'
+          sh 'mkdir -p ~/.ssh && ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts'
+          sh 'rm -rf offers-engine'
+          sh "GIT_SSH_COMMAND='ssh -i $KEY_FILE' git clone git@github.com:DocnetUK/offers-engine.git"
         }
+
         sh 'echo "Build stage"'
         sh 'ls -la $(PWD) && cd offers-engine && ls -la'
       }
