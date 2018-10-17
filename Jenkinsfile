@@ -60,9 +60,6 @@ vendor/bin/phpunit'''
                   echo "Pass is: $PASS"
                 '''
             }
-        #withCredentials([usernameColonPassword(credentialsId: 'test-creds', variable: 'USERPASS')]) {
-
-        #}
       }
     }
     stage('Deploy') {
