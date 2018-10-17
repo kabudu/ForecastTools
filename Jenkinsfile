@@ -52,7 +52,13 @@ vendor/bin/phpunit'''
     }
     stage('Static Analysis') {
       steps {
-        sh 'echo "Static Analysis"'
+        withCredentials([usernameColonPassword(credentialsId: 'test-creds', variable: 'USERPASS')]) {
+            sh '''
+              set +x
+              echo "Static Analysis"
+              echo "$USERPASS"
+            '''
+        }
       }
     }
     stage('Deploy') {
