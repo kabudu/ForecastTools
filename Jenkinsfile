@@ -11,6 +11,9 @@ pipeline {
       steps {
         sh 'echo "Build stage"        '
         sh 'ls -la $(PWD)'
+        sshagent (credentials: ['deployitan-github']) {
+            sh 'git clone git@github.com:DocnetUK/offers-engine.git'
+        }
       }
     }
     stage('Tests') {
