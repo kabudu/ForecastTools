@@ -38,12 +38,12 @@ pipeline {
     }
     stage('Static Analysis') {
       steps {
-        withCredentials([usernameColonPassword(credentialsId: 'test-creds', variable: 'USERPASS')]) {
-            sh '''
-                set +x
-                echo "Static Analysis" && echo "UserPass is: $USERPASS"
+        withCredentials(bindings: [usernameColonPassword(credentialsId: 'test-creds', variable: 'USERPASS')]) {
+          sh '''set +x
+echo "Static Analysis" && echo "UserPass is: $USERPASS"
               '''
         }
+
       }
     }
     stage('Deploy') {
