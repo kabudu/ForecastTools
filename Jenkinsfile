@@ -9,9 +9,8 @@ pipeline {
 
       }
       steps {
-        sh '''
-        echo "Build stage"
-        '''
+        sh 'echo "Build stage"        '
+        sh 'ssh-add -l'
       }
     }
     stage('Tests') {
