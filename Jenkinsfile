@@ -52,13 +52,17 @@ vendor/bin/phpunit'''
     }
     stage('Static Analysis') {
       steps {
-        withCredentials([usernameColonPassword(credentialsId: 'test-creds', variable: 'USERPASS')]) {
-            sh '''
-              set +x
-              echo "Static Analysis"
-              echo "Userpass is: $USERPASS"
-            '''
-        }
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'test-creds', usernameVariable: 'USER', passwordVariable: 'PASS']]) {
+                sh '''
+                  set +x
+                  echo "Static Analysis" && \
+                  echo "User is: $USER" && \
+                  echo "Pass is: $PASS"
+                '''
+            }
+        #withCredentials([usernameColonPassword(credentialsId: 'test-creds', variable: 'USERPASS')]) {
+
+        #}
       }
     }
     stage('Deploy') {
