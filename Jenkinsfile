@@ -10,7 +10,8 @@ pipeline {
       }
       steps {
         sh 'echo "Build stage"        '
-        sh 'ssh-add -l'
+        sh '''apk update && apk add openssh-client && \\
+ssh-add -l'''
       }
     }
     stage('Tests') {
