@@ -10,7 +10,7 @@ pipeline {
       }
       steps {
         sh 'echo "Build stage"        '
-        sh 'ls -la ~/.ssh'
+        sh 'ls -la $(PWD)'
       }
     }
     stage('Tests') {
