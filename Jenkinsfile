@@ -56,7 +56,7 @@ vendor/bin/phpunit'''
             sh '''
               set +x
               echo "Static Analysis"
-              echo "$USERPASS"
+              echo "Userpass is: $USERPASS"
             '''
         }
       }
