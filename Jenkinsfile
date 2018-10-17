@@ -7,11 +7,12 @@ pipeline {
           image 'alpine:3.7'
         }
       }
-      sshagent (credentials: ['deployitan-github']) {
-          sh 'git clone git@github.com:DocnetUK/offers-engine.git'
-      }
       steps {
-        sh 'echo "Build stage"        '
+        withCredentials([sshUserPrivateKey(credentialsId: "deployitan-github", keyFileVariable: 'KEY_FILE')]) {
+            sh 'apk update && apk add openssh-client git'
+            sh "GIT_SSH_COMMAND='ssh -i $KEY_FILE' git clone git@github.com:DocnetUK/offers-engine.git"
+        }
+        sh 'echo "Build stage"'
         sh 'ls -la $(PWD)'
       }
     }
